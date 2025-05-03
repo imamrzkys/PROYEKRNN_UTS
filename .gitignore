@@ -1,46 +1,49 @@
-# Python virtual environments
-venv/
-.venv/
-ENV/
-
-# Byte-compiled / optimized / DLL files
+# Python
 __pycache__/
 *.py[cod]
-*$py.class
+*.so
+*.log
+*.sqlite3
+*.pkl
+*.h5
+*.hdf5
+*.joblib
 
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints/
+# Environments
+.env
+.venv/
+venv/
+ENV/
+env/
+*.env
 
-# VSCode and PyCharm project files
-.vscode/
-.idea/
-
-# OS files
+# OS
 .DS_Store
 Thumbs.db
 
-# Environment variables
-.env
-
-# Database files
-*.sqlite3
-*.db
-
-# Mac/Linux hidden files
+# IDE/editor
+.vscode/
+.idea/
 *.swp
-*~
 
-# Railway/Heroku
-Procfile
+# Jupyter Notebooks
+.ipynb_checkpoints
 
-# Model artifacts
-*.h5
-*.hdf5
-*.pkl
-*.joblib
+# Flask static/generated files
+static/*.png
+static/*.jpg
+static/*.jpeg
+static/*.gif
 
-# Output folders
+# Dataset
+*.csv
 dataset/
+!dataset/.gitkeep  # tetap simpan folder kosong jika perlu
 
-# Ignore logs
-*.log
+# Model artifacts (optional)
+lstm_sentiment.h5
+tokenizer_lstm.pkl
+label_encoder.pkl
+
+# Railway
+railway.json

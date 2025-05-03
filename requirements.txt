@@ -7,5 +7,6 @@ wordcloud
 scikit-learn
 tensorflow
 keras
-Sastrawi
+sastrawi
 nltk
+waitress
