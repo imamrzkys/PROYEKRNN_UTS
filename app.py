@@ -102,6 +102,10 @@ def predict_sentiment_lstm(texts):
     else:
         return [label_sentiment(t) for t in texts]
 
+# WAJIB untuk deployment: expose variabel `app`
+# Railway dan Gunicorn akan mencari variabel bernama "app" di file utama
+# Pastikan variabel 'app' tersedia di global scope
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     komentar = ''
@@ -152,12 +156,6 @@ def upload():
         else:
             flash('Harus file .csv', 'danger')
     return render_template('upload.html')
-
-# WAJIB untuk deployment: expose variabel `app`
-# untuk Gunicorn atau Railway: waitress-serve --call app:app
-if __name__ != '__main__':
-    # Agar Railway bisa akses app saat bukan di-run secara langsung
-    application = app
 
 # Untuk development lokal
 if __name__ == '__main__':
