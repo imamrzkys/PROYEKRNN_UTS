@@ -1,1 +1,1 @@
-web: python main.py
+web: waitress-serve --port=8080 --call main:app
