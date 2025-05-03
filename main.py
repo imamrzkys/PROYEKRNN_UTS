@@ -4,7 +4,6 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud
 import numpy as np
 import base64
 import glob
@@ -28,6 +27,10 @@ CSV_PATH = os.path.join(BASE_DIR, 'dataset_tiktok-comments-scraper-task_2025-05-
 # Pastikan folder penting ada
 os.makedirs(STATIC_FOLDER, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# --- FLASK APP SETUP ---
+app = Flask(__name__, template_folder='app/templates')
+app.secret_key = 'supersecretkey'
 
 # Preprocessing sederhana
 def preprocess_text(text):
@@ -76,7 +79,7 @@ def get_latest_plot(prefix):
 def get_latest_wordcloud(sentiment):
     return get_latest_plot(f'wordcloud_{sentiment}')
 
-# Load model
+# --- LOAD MODEL, TOKENIZER, ENCODER ---
 def load_artifacts():
     try:
         model = load_model(MODEL_PATH) if os.path.exists(MODEL_PATH) else None
@@ -98,13 +101,7 @@ def predict_sentiment_lstm(texts):
     else:
         return [label_sentiment(t) for t in texts]
 
-# WAJIB untuk deployment: expose variabel `app`
-# Railway dan Gunicorn akan mencari variabel bernama "app" di file utama
-# Pastikan variabel 'app' tersedia di global scope
-
-app = Flask(__name__, template_folder='app/templates')
-app.secret_key = 'supersecretkey'
-
+# --- FLASK ROUTES ---
 @app.route('/', methods=['GET', 'POST'])
 def index():
     komentar = ''
@@ -122,12 +119,8 @@ def index():
         {'text': 'Ayo semangat timnas', 'sentimen': 'positif'},
     ])
     counts = sample_data['sentimen'].value_counts().to_dict()
-    distribusi_img = get_latest_plot('sentiment')
-    wordclouds = {
-        'positif': get_latest_wordcloud('positif'),
-        'negatif': get_latest_wordcloud('negatif'),
-        'netral': get_latest_wordcloud('netral'),
-    }
+    distribusi_img = None
+    wordclouds = {'positif': None, 'negatif': None, 'netral': None}
 
     model_status = 'Model LSTM belum tersedia.' if not model else 'Model LSTM siap digunakan.'
 
