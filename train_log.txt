@@ -1,0 +1,16 @@
+Epoch 1/8
+125/125 - 15s - 124ms/step - accuracy: 0.7529 - loss: 0.7358 - val_accuracy: 0.7793 - val_loss: 0.6803
+Epoch 2/8
+125/125 - 6s - 50ms/step - accuracy: 0.7575 - loss: 0.7202 - val_accuracy: 0.7793 - val_loss: 0.6850
+Epoch 3/8
+125/125 - 6s - 50ms/step - accuracy: 0.7575 - loss: 0.7198 - val_accuracy: 0.7783 - val_loss: 0.6753
+Epoch 4/8
+125/125 - 7s - 56ms/step - accuracy: 0.7552 - loss: 0.6962 - val_accuracy: 0.7793 - val_loss: 0.6538
+Epoch 5/8
+125/125 - 6s - 50ms/step - accuracy: 0.7570 - loss: 0.6668 - val_accuracy: 0.7793 - val_loss: 0.6465
+Epoch 6/8
+125/125 - 6s - 50ms/step - accuracy: 0.7577 - loss: 0.6560 - val_accuracy: 0.7793 - val_loss: 0.6371
+Epoch 7/8
+125/125 - 6s - 49ms/step - accuracy: 0.7570 - loss: 0.6199 - val_accuracy: 0.7793 - val_loss: 0.6106
+Epoch 8/8
+125/125 - 6s - 50ms/step - accuracy: 0.7570 - loss: 0.6497 - val_accuracy: 0.7793 - val_loss: 0.6211

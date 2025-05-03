@@ -26,6 +26,16 @@
 <body class="bg-light">
 <div class="container">
     <h2 class="mb-4 text-center">Progress Training Model LSTM</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
     <div id="progress-section">
         <div class="progress mb-3">
             <div id="progress-bar" class="progress-bar bg-warning" role="progressbar" style="width: 0%">0%</div>

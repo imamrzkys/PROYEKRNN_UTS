@@ -73,10 +73,10 @@
 </head>
 <body style="background: linear-gradient(135deg, #f5f7fa 0%, #e3e6ff 100%); min-height:100vh;">
 <div class="container py-4">
-    <div class="text-center mb-4">
-        <h2 class="main-title mb-2" style="border-bottom: 3px solid #ff9800; display:inline-block; padding-bottom:0.2em;">Analisis Sentimen Netizen TikTok</h2>
-        <h5 class="subtitle">"Shin Tae-yong Out, Patrick Kluivert In: Blunder atau Harapan Baru?"</h5>
-    </div>
+    <!-- Tombol Label All Data diganti agar tidak error, arahkan ke /refresh -->
+    <form method="post" action="{{ url_for('refresh') }}" style="display:inline-block; margin-bottom:10px;">
+        <button type="submit" class="btn btn-warning">Label All Data</button>
+    </form>
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
@@ -87,11 +87,19 @@
         {% endfor %}
       {% endif %}
     {% endwith %}
+    <div class="text-center mb-4">
+        <h2 class="main-title mb-2" style="border-bottom: 3px solid #ff9800; display:inline-block; padding-bottom:0.2em;">Analisis Sentimen Netizen TikTok</h2>
+        <h5 class="subtitle">"Shin Tae-yong Out, Patrick Kluivert In: Blunder atau Harapan Baru?"</h5>
+    </div>
     <div class="row mb-4 g-4 align-items-stretch flex-column flex-md-row">
         <div class="col-12 col-md-6 mb-3 mb-md-0">
             <div class="card h-100 shadow-lg border-0 p-3" style="background:#fff;">
                 <h6 class="mb-3" style="color:#183153;">Distribusi Sentimen</h6>
-                <img src="data:image/png;base64,{{ distribusi_img }}" class="img-fluid border rounded-3 mb-2" alt="Distribusi Sentimen">
+                {% if distribusi_img %}
+                  <img src="data:image/png;base64,{{ distribusi_img }}" class="img-fluid rounded shadow mb-2" alt="Distribusi Sentimen">
+                {% else %}
+                  <div class="alert alert-warning">Grafik distribusi belum tersedia.</div>
+                {% endif %}
             </div>
         </div>
         <!-- Bagian Tabel Respon Sentimen & Grafik Emosi DIHAPUS SESUAI PERMINTAAN -->
@@ -100,19 +108,31 @@
         <div class="col-12 col-md-4">
             <div class="card h-100 shadow-sm border-0 p-2 text-center wordcloud-card" style="background:#fff;">
                 <h6 class="text-center mb-2" style="color:#4caf50;">Wordcloud Positif</h6>
-                <img src="data:image/png;base64,{{ wordcloud_pos }}" class="wordcloud-img" alt="Wordcloud Positif">
+                {% if wordcloud_pos %}
+                  <img src="data:image/png;base64,{{ wordcloud_pos }}" class="wordcloud-img" alt="Wordcloud Positif" loading="lazy">
+                {% else %}
+                  <div class="alert alert-warning">Wordcloud positif belum tersedia.</div>
+                {% endif %}
             </div>
         </div>
         <div class="col-12 col-md-4">
             <div class="card h-100 shadow-sm border-0 p-2 text-center wordcloud-card" style="background:#fff;">
                 <h6 class="text-center mb-2" style="color:#e53935;">Wordcloud Negatif</h6>
-                <img src="data:image/png;base64,{{ wordcloud_neg }}" class="wordcloud-img" alt="Wordcloud Negatif">
+                {% if wordcloud_neg %}
+                  <img src="data:image/png;base64,{{ wordcloud_neg }}" class="wordcloud-img" alt="Wordcloud Negatif" loading="lazy">
+                {% else %}
+                  <div class="alert alert-warning">Wordcloud negatif belum tersedia.</div>
+                {% endif %}
             </div>
         </div>
         <div class="col-12 col-md-4">
             <div class="card h-100 shadow-sm border-0 p-2 text-center wordcloud-card" style="background:#fff;">
                 <h6 class="text-center mb-2" style="color:#607d8b;">Wordcloud Netral</h6>
-                <img src="data:image/png;base64,{{ wordcloud_net }}" class="wordcloud-img" alt="Wordcloud Netral">
+                {% if wordcloud_net %}
+                  <img src="data:image/png;base64,{{ wordcloud_net }}" class="wordcloud-img" alt="Wordcloud Netral" loading="lazy">
+                {% else %}
+                  <div class="alert alert-warning">Wordcloud netral belum tersedia.</div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -121,9 +141,9 @@
         <div class="card shadow-lg border-0 p-3" style="background:#fff;">
             <h6 class="mb-3" style="color:#183153;">Aktivitas Komentar per Waktu</h6>
             {% if aktivitas_img %}
-            <img src="data:image/png;base64,{{ aktivitas_img }}" class="img-fluid border rounded-3" alt="Aktivitas Komentar" style="max-width: 480px; height: auto; display: block; margin: 0 auto;" />
+              <img src="data:image/png;base64,{{ aktivitas_img }}" class="img-fluid rounded shadow" alt="Aktivitas Komentar">
             {% else %}
-            <div class="alert alert-warning">Tidak ada data waktu komentar.</div>
+              <div class="alert alert-warning">Grafik aktivitas belum tersedia.</div>
             {% endif %}
         </div>
       </div>
@@ -136,14 +156,14 @@
             <div class="table-responsive">
               <table class="table table-striped table-hover table-sm align-middle mb-0">
                 <thead class="table-light">
-                  <tr><th>Komentar</th><th>Sentimen</th><th>Emosi</th></tr>
+                  <tr><th>Komentar</th><th>Sentimen</th>{% if table[0]['emosi'] is defined %}<th>Emosi</th>{% endif %}</tr>
                 </thead>
                 <tbody>
                 {% for row in table %}
                   <tr>
                     <td>{{ row.text }}</td>
                     <td><span class="badge {% if row.sentimen == 'positif' %}bg-success{% elif row.sentimen == 'negatif' %}bg-danger{% else %}bg-secondary{% endif %}">{{ row.sentimen|capitalize }}</span></td>
-                    <td><span class="badge bg-info">{{ row.emosi|capitalize }}</span></td>
+                    {% if row.emosi is defined %}<td><span class="badge bg-info">{{ row.emosi|capitalize }}</span></td>{% endif %}
                   </tr>
                 {% endfor %}
                 {% if table|length == 0 %}
@@ -159,11 +179,13 @@
         <div class="card shadow-lg border-0">
           <div class="card-body">
             <h6 class="mb-3" style="color:#183153;">Evaluasi Model LSTM</h6>
+            <div class="mb-2">
+              <span class="badge {% if model_status == 'Model LSTM siap digunakan.' %}bg-success{% else %}bg-danger{% endif %}">{{ model_status }}</span>
+            </div>
             <form method="POST" action="/train" id="train-form">
               <button type="submit" class="btn btn-warning btn-sm mb-2">Train / Retrain Model</button>
             </form>
             <script>
-            // Redirect ke halaman progress training setelah klik tombol train
             document.getElementById('train-form').onsubmit = function(e) {
                 e.preventDefault();
                 fetch('/train', {method:'POST'})
@@ -176,8 +198,6 @@
                 return false;
             };
             </script>
-            <div class="mb-2">{{ model_status }}</div>
-            <hr>
             <div class="small text-muted">
               <b>Petunjuk:</b><br>
               - Dataset otomatis terproses dan divisualisasikan.<br>
@@ -196,7 +216,7 @@
             <h6 class="mb-3" style="color:#183153;">Coba Analisis Sentimen Komentar Baru</h6>
             <form method="POST" action="/" class="mb-2">
               <textarea name="komentar" class="form-control mb-2" rows="2" placeholder="Masukkan komentar...">{{ comment_input }}</textarea>
-              <div class="d-flex gap-2">
+              <div class="d-flex gap-2 flex-wrap">
                 <button type="submit" class="btn btn-primary">Prediksi Sentimen</button>
                 <button type="submit" formaction="/refresh" class="btn btn-outline-secondary">Refresh Dataset</button>
                 <button type="submit" formaction="/upload" class="btn btn-outline-info">Upload Dataset</button>
