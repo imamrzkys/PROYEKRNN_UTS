@@ -26,7 +26,7 @@ MODEL_PATH = os.path.join(BASE_DIR, 'lstm_sentiment.h5')
 TOKENIZER_PATH = os.path.join(BASE_DIR, 'tokenizer_lstm.pkl')
 LABEL_ENCODER_PATH = os.path.join(BASE_DIR, 'label_encoder.pkl')
 CSV_PATH = os.path.join(BASE_DIR, 'dataset_tiktok-comments-scraper-task_2025-05-01_09-17-35-852.csv')
-DATASET_PATH = os.path.join(BASE_DIR, 'dataset/komentar_labeled.csv')
+DATASET_PATH = os.path.join(BASE_DIR, 'dataset/komentar_labeled_small.csv')
 RAW_CSV_PATH = os.path.join(BASE_DIR, 'dataset_tiktok-comments-scraper-task_2025-05-01_09-17-35-852.csv')
 
 # Pastikan folder penting ada

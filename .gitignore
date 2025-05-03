@@ -4,10 +4,10 @@ __pycache__/
 *.so
 *.log
 *.sqlite3
-*.pkl
-*.h5
-*.hdf5
-*.joblib
+#*.pkl
+#*.h5
+#*.hdf5
+#*.joblib
 
 # Environments
 .env
@@ -36,14 +36,15 @@ static/*.jpeg
 static/*.gif
 
 # Dataset
-*.csv
-dataset/
-!dataset/.gitkeep  # tetap simpan folder kosong jika perlu
+!dataset/
+dataset/*.csv
+!dataset/komentar_labeled.csv
+!dataset/komentar_labeled_small.csv
 
 # Model artifacts (optional)
-lstm_sentiment.h5
+!lstm_sentiment.h5
+!label_encoder.pkl
 tokenizer_lstm.pkl
-label_encoder.pkl
 
 # Railway
 railway.json
