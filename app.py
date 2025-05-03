@@ -16,10 +16,6 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 # Logging
 logging.basicConfig(level=logging.INFO)
 
-# Inisialisasi Flask
-app = Flask(__name__, template_folder='app/templates')
-app.secret_key = 'supersecretkey'
-
 # Path
 BASE_DIR = os.path.dirname(__file__)
 STATIC_FOLDER = os.path.join(BASE_DIR, 'static')
@@ -105,6 +101,9 @@ def predict_sentiment_lstm(texts):
 # WAJIB untuk deployment: expose variabel `app`
 # Railway dan Gunicorn akan mencari variabel bernama "app" di file utama
 # Pastikan variabel 'app' tersedia di global scope
+
+app = Flask(__name__, template_folder='app/templates')
+app.secret_key = 'supersecretkey'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
