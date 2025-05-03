@@ -82,17 +82,14 @@ def get_latest_wordcloud(sentiment):
 
 # Load model
 def load_artifacts():
-    model = tokenizer = label_encoder = None
     try:
-        if os.path.exists(MODEL_PATH):
-            model = load_model(MODEL_PATH)
-        if os.path.exists(TOKENIZER_PATH):
-            tokenizer = joblib.load(TOKENIZER_PATH)
-        if os.path.exists(LABEL_ENCODER_PATH):
-            label_encoder = joblib.load(LABEL_ENCODER_PATH)
+        model = load_model(MODEL_PATH) if os.path.exists(MODEL_PATH) else None
+        tokenizer = joblib.load(TOKENIZER_PATH) if os.path.exists(TOKENIZER_PATH) else None
+        label_encoder = joblib.load(LABEL_ENCODER_PATH) if os.path.exists(LABEL_ENCODER_PATH) else None
+        return model, tokenizer, label_encoder
     except Exception as e:
-        logging.warning(f'Gagal memuat model: {e}')
-    return model, tokenizer, label_encoder
+        logging.warning(f'Gagal memuat model/tokenizer/label encoder: {e}')
+        return None, None, None
 
 model, tokenizer, label_encoder = load_artifacts()
 
@@ -116,7 +113,7 @@ def index():
         hasil = predict_sentiment_lstm([clean])[0]
         hasil_prediksi = {'komentar': komentar, 'cleaned': clean, 'sentimen': hasil}
 
-    # Dummy data atau bisa diganti load dari CSV
+    # Dummy data sementara
     sample_data = pd.DataFrame([
         {'text': 'STY out!', 'sentimen': 'negatif'},
         {'text': 'Ayo semangat timnas', 'sentimen': 'positif'},
@@ -141,7 +138,7 @@ def index():
         pred_result=hasil_prediksi,
         comment_input=komentar,
         model_status=model_status,
-        lstm_training_img=None  # Optional: load base64 img jika ada
+        lstm_training_img=None
     )
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -156,6 +153,13 @@ def upload():
             flash('Harus file .csv', 'danger')
     return render_template('upload.html')
 
+# WAJIB untuk deployment: expose variabel `app`
+# untuk Gunicorn atau Railway: waitress-serve --call app:app
+if __name__ != '__main__':
+    # Agar Railway bisa akses app saat bukan di-run secara langsung
+    application = app
+
+# Untuk development lokal
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(debug=True, host='0.0.0.0', port=port)
