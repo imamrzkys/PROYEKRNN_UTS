@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 import os
 import pandas as pd
-from app.utils import preprocess_and_label_csv, label_sentiment, label_emotion
-from app.preprocessing import preprocess_text
-from app.model import predict_sentiment_lstm, train_lstm_model, evaluate_lstm_model, load_lstm_model
+from src.utils import preprocess_and_label_csv, label_sentiment, label_emotion
+from src.preprocessing import preprocess_text
+from src.model import predict_sentiment_lstm, train_lstm_model, evaluate_lstm_model, load_lstm_model
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -170,7 +170,7 @@ def train():
                     train_progress['current'] = epoch + 1
                     train_progress['total'] = self.total_epochs
                     train_progress['msg'] = f"Epoch {epoch+1}/{self.total_epochs} - acc: {logs.get('accuracy',0):.3f} - val_acc: {logs.get('val_accuracy',0):.3f}"
-            from app.model import train_lstm_model
+            from src.model import train_lstm_model
             model, tokenizer, _ = train_lstm_model(DATASET_PATH, progress_callback=ProgressCallback)
             train_progress['status'] = 'done'
             train_progress['msg'] = 'Training selesai!'

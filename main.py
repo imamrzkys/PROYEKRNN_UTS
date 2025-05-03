@@ -29,7 +29,7 @@ os.makedirs(STATIC_FOLDER, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # --- FLASK APP SETUP ---
-app = Flask(__name__, template_folder='app/templates')
+app = Flask(__name__, template_folder='src/templates')
 app.secret_key = 'supersecretkey'
 
 # Preprocessing sederhana

@@ -1,5 +1,5 @@
 import pandas as pd
-from app.preprocessing import preprocess_text
+from src.preprocessing import preprocess_text
 from tqdm import tqdm  
 
 # Keyword heuristik sederhana untuk labeling
