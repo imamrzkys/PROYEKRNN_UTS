@@ -1,0 +1,46 @@
+# Python virtual environments
+venv/
+.venv/
+ENV/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VSCode and PyCharm project files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+
+# Database files
+*.sqlite3
+*.db
+
+# Mac/Linux hidden files
+*.swp
+*~
+
+# Railway/Heroku
+Procfile
+
+# Model artifacts
+*.h5
+*.hdf5
+*.pkl
+*.joblib
+
+# Output folders
+dataset/
+
+# Ignore logs
+*.log

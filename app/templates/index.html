@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Analisis Sentimen Netizen - Shin Tae-yong Out, Patrick Kluivert In</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background: #f5f7fa;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .main-title {
+            font-size: 2.3rem;
+            font-weight: bold;
+            color: #183153;
+            letter-spacing: 0.5px;
+        }
+        .subtitle {
+            color: #ff9800;
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-bottom: 2rem;
+        }
+        .wordcloud-img {
+            max-width:100%; height:220px; object-fit:contain; border-radius: 10px; border: 2px solid #e3e6f0;
+        }
+        .sentiment-box { min-height: 120px; background: #fffbe7; border-radius: 10px; }
+        .card {
+            border-radius: 14px;
+            box-shadow: 0 3px 16px rgba(24,49,83,0.07);
+            border: 1px solid #e3e6f0;
+        }
+        .card-title {
+            color: #183153;
+            font-weight: bold;
+            letter-spacing: 0.2px;
+        }
+        .table {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .table th {
+            background: #e3e6f0;
+            color: #183153;
+            font-weight: 600;
+        }
+        .badge.bg-success { background: #4caf50!important; }
+        .badge.bg-danger { background: #e53935!important; }
+        .badge.bg-secondary { background: #607d8b!important; }
+        .btn-primary {
+            background: #1976d2;
+            border: none;
+        }
+        .btn-primary:hover { background: #125ea8; }
+        .btn-warning { background: #ff9800; color: #fff; border: none; }
+        .btn-warning:hover { background: #ffb300; color: #fff; }
+        .btn-outline-secondary { border-color: #607d8b; color: #607d8b; }
+        .btn-outline-secondary:hover { background: #607d8b; color: #fff; }
+        .btn-outline-info { border-color: #1976d2; color: #1976d2; }
+        .btn-outline-info:hover { background: #1976d2; color: #fff; }
+        @media (max-width: 767.98px) {
+            .main-title { font-size: 1.5rem; }
+            .subtitle { font-size: 1rem; }
+            .card { margin-bottom: 1rem; }
+            .wordcloud-img { height: 140px; }
+        }
+    </style>
+</head>
+<body style="background: linear-gradient(135deg, #f5f7fa 0%, #e3e6ff 100%); min-height:100vh;">
+<div class="container py-4">
+    <div class="text-center mb-4">
+        <h2 class="main-title mb-2" style="border-bottom: 3px solid #ff9800; display:inline-block; padding-bottom:0.2em;">Analisis Sentimen Netizen TikTok</h2>
+        <h5 class="subtitle">"Shin Tae-yong Out, Patrick Kluivert In: Blunder atau Harapan Baru?"</h5>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <div class="row mb-4 g-4 align-items-stretch flex-column flex-md-row">
+        <div class="col-12 col-md-6 mb-3 mb-md-0">
+            <div class="card h-100 shadow-lg border-0 p-3" style="background:#fff;">
+                <h6 class="mb-3" style="color:#183153;">Distribusi Sentimen</h6>
+                <img src="data:image/png;base64,{{ distribusi_img }}" class="img-fluid border rounded-3 mb-2" alt="Distribusi Sentimen">
+            </div>
+        </div>
+        <!-- Bagian Tabel Respon Sentimen & Grafik Emosi DIHAPUS SESUAI PERMINTAAN -->
+    </div>
+    <div class="row g-3">
+        <div class="col-12 col-md-4">
+            <div class="card h-100 shadow-sm border-0 p-2 text-center wordcloud-card" style="background:#fff;">
+                <h6 class="text-center mb-2" style="color:#4caf50;">Wordcloud Positif</h6>
+                <img src="data:image/png;base64,{{ wordcloud_pos }}" class="wordcloud-img" alt="Wordcloud Positif">
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card h-100 shadow-sm border-0 p-2 text-center wordcloud-card" style="background:#fff;">
+                <h6 class="text-center mb-2" style="color:#e53935;">Wordcloud Negatif</h6>
+                <img src="data:image/png;base64,{{ wordcloud_neg }}" class="wordcloud-img" alt="Wordcloud Negatif">
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card h-100 shadow-sm border-0 p-2 text-center wordcloud-card" style="background:#fff;">
+                <h6 class="text-center mb-2" style="color:#607d8b;">Wordcloud Netral</h6>
+                <img src="data:image/png;base64,{{ wordcloud_net }}" class="wordcloud-img" alt="Wordcloud Netral">
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-4">
+      <div class="col-12 col-md-7 col-lg-6">
+        <div class="card shadow-lg border-0 p-3" style="background:#fff;">
+            <h6 class="mb-3" style="color:#183153;">Aktivitas Komentar per Waktu</h6>
+            {% if aktivitas_img %}
+            <img src="data:image/png;base64,{{ aktivitas_img }}" class="img-fluid border rounded-3" alt="Aktivitas Komentar" style="max-width: 480px; height: auto; display: block; margin: 0 auto;" />
+            {% else %}
+            <div class="alert alert-warning">Tidak ada data waktu komentar.</div>
+            {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="row g-4 mt-4">
+      <div class="col-12 col-md-8">
+        <div class="card shadow-lg border-0">
+          <div class="card-body">
+            <h6 class="mb-3" style="color:#183153;">Tabel Komentar (Sample)</h6>
+            <div class="table-responsive">
+              <table class="table table-striped table-hover table-sm align-middle mb-0">
+                <thead class="table-light">
+                  <tr><th>Komentar</th><th>Sentimen</th><th>Emosi</th></tr>
+                </thead>
+                <tbody>
+                {% for row in table %}
+                  <tr>
+                    <td>{{ row.text }}</td>
+                    <td><span class="badge {% if row.sentimen == 'positif' %}bg-success{% elif row.sentimen == 'negatif' %}bg-danger{% else %}bg-secondary{% endif %}">{{ row.sentimen|capitalize }}</span></td>
+                    <td><span class="badge bg-info">{{ row.emosi|capitalize }}</span></td>
+                  </tr>
+                {% endfor %}
+                {% if table|length == 0 %}
+                  <tr><td colspan="3" class="text-center text-muted">Tidak ada data komentar.</td></tr>
+                {% endif %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="card shadow-lg border-0">
+          <div class="card-body">
+            <h6 class="mb-3" style="color:#183153;">Evaluasi Model LSTM</h6>
+            <form method="POST" action="/train" id="train-form">
+              <button type="submit" class="btn btn-warning btn-sm mb-2">Train / Retrain Model</button>
+            </form>
+            <script>
+            // Redirect ke halaman progress training setelah klik tombol train
+            document.getElementById('train-form').onsubmit = function(e) {
+                e.preventDefault();
+                fetch('/train', {method:'POST'})
+                .then(resp => resp.text())
+                .then(html => {
+                    document.open();
+                    document.write(html);
+                    document.close();
+                });
+                return false;
+            };
+            </script>
+            <div class="mb-2">{{ model_status }}</div>
+            <hr>
+            <div class="small text-muted">
+              <b>Petunjuk:</b><br>
+              - Dataset otomatis terproses dan divisualisasikan.<br>
+              - Klik <b>Refresh Dataset</b> jika ingin update data.<br>
+              - Sentimen ditentukan otomatis berbasis keyword atau model LSTM.<br>
+              - <b>Train Model</b> untuk melatih model LSTM.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center mt-4">
+      <div class="col-12 col-md-8 col-lg-6 mx-auto">
+        <div class="card shadow-lg border-0 p-3">
+          <div class="card-body">
+            <h6 class="mb-3" style="color:#183153;">Coba Analisis Sentimen Komentar Baru</h6>
+            <form method="POST" action="/" class="mb-2">
+              <textarea name="komentar" class="form-control mb-2" rows="2" placeholder="Masukkan komentar...">{{ comment_input }}</textarea>
+              <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Prediksi Sentimen</button>
+                <button type="submit" formaction="/refresh" class="btn btn-outline-secondary">Refresh Dataset</button>
+                <button type="submit" formaction="/upload" class="btn btn-outline-info">Upload Dataset</button>
+              </div>
+            </form>
+            {% if pred_result %}
+            <div class="mt-4 sentiment-box">
+                <h6>Hasil Prediksi:</h6>
+                <ul class="mb-0">
+                    <li><b>Komentar asli:</b> {{ pred_result.komentar }}</li>
+                    <li><b>Setelah preprocessing:</b> {{ pred_result.cleaned }}</li>
+                    <li><b>Sentimen:</b> <span class="badge {% if pred_result.sentimen == 'positif' %}bg-success{% elif pred_result.sentimen == 'negatif' %}bg-danger{% else %}bg-secondary{% endif %}">{{ pred_result.sentimen|capitalize }}</span></li>
+                </ul>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="text-center text-muted mt-5">&copy; 2025 Analisis Sentimen TikTok - UTS Kecerdasan Buatan</footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
