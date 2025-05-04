@@ -156,6 +156,11 @@ def predict_sentiment_lstm(texts):
     try:
         debug_log_model_status()
         if model and tokenizer and label_encoder:
+            # Validasi tipe tokenizer
+            from tensorflow.keras.preprocessing.text import Tokenizer
+            if not isinstance(tokenizer, Tokenizer):
+                print(f'ERROR: Tokenizer tipe salah: {type(tokenizer)}')
+                return ['ERROR: Tokenizer tipe salah!']
             seqs = tokenizer.texts_to_sequences(texts)
             padded = pad_sequences(seqs, maxlen=100)
             preds = model.predict(padded)
@@ -170,7 +175,6 @@ def predict_sentiment_lstm(texts):
         print(f'ERROR in predict_sentiment_lstm: {e}')
         import traceback
         print(traceback.format_exc())
-        # Return a fallback result so web does not 500
         return [f'ERROR: {str(e)}']
 
 # Helper untuk load dataset
