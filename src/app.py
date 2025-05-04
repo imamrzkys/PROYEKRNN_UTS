@@ -127,44 +127,19 @@ def get_latest_wordcloud(sentiment):
 
 # --- LOAD MODEL, TOKENIZER, ENCODER ---
 def load_artifacts():
-    from src.model import MODEL_PATH, TOKENIZER_PATH, LABEL_ENCODER_PATH
-    from tensorflow.keras.models import load_model
-    import joblib
-    import os
-    import logging
-    import traceback
-    model = None
-    tokenizer = None
-    label_encoder = None
-    # Load model
     try:
-        if os.path.exists(MODEL_PATH):
-            model = load_model(MODEL_PATH)
-            print("DEBUG: load_model berhasil!")
-        else:
-            print("DEBUG: MODEL_PATH tidak ditemukan!")
+        model = load_model(MODEL_PATH) if os.path.exists(MODEL_PATH) else None
+        tokenizer = joblib.load(TOKENIZER_PATH) if os.path.exists(TOKENIZER_PATH) else None
+        # Tambah validasi tipe object tokenizer
+        from tensorflow.keras.preprocessing.text import Tokenizer
+        if tokenizer is not None and not isinstance(tokenizer, Tokenizer):
+            print(f'ERROR: Tokenizer loaded but type is {type(tokenizer)}. File TOKENIZER_PATH corrupt or not a Tokenizer!')
+            tokenizer = None
+        label_encoder = joblib.load(LABEL_ENCODER_PATH) if os.path.exists(LABEL_ENCODER_PATH) else None
+        return model, tokenizer, label_encoder
     except Exception as e:
-        print(f"ERROR load_model: {e}\n{traceback.format_exc()}")
-    # Load tokenizer
-    try:
-        if os.path.exists(TOKENIZER_PATH):
-            tokenizer = joblib.load(TOKENIZER_PATH)
-            print("DEBUG: load_tokenizer berhasil!")
-        else:
-            print("DEBUG: TOKENIZER_PATH tidak ditemukan!")
-    except Exception as e:
-        print(f"ERROR load_tokenizer: {e}\n{traceback.format_exc()}")
-    # Load label encoder
-    try:
-        if os.path.exists(LABEL_ENCODER_PATH):
-            label_encoder = joblib.load(LABEL_ENCODER_PATH)
-            print("DEBUG: load_label_encoder berhasil!")
-        else:
-            print("DEBUG: LABEL_ENCODER_PATH tidak ditemukan!")
-    except Exception as e:
-        print(f"ERROR load_label_encoder: {e}\n{traceback.format_exc()}")
-    print(f"DEBUG: load_model={model is not None}, load_tokenizer={tokenizer is not None}, load_label_encoder={label_encoder is not None}")
-    return model, tokenizer, label_encoder
+        logging.warning(f'Gagal memuat model/tokenizer/label encoder: {e}')
+        return None, None, None
 
 model, tokenizer, label_encoder = load_artifacts()
 
@@ -178,18 +153,25 @@ def debug_log_model_status():
         print('DEBUG: TOKENIZER_PATH size:', os.path.getsize(TOKENIZER_PATH))
 
 def predict_sentiment_lstm(texts):
-    debug_log_model_status()
-    if model and tokenizer and label_encoder:
-        seqs = tokenizer.texts_to_sequences(texts)
-        padded = pad_sequences(seqs, maxlen=100)
-        preds = model.predict(padded)
-        print('DEBUG: preds =', preds)
-        result = label_encoder.inverse_transform(preds.argmax(axis=1))
-        print('DEBUG: Predicted Sentiment:', result)
-        return result
-    else:
-        print('WARNING: Model/tokenizer/label_encoder not loaded!')
-        return [label_sentiment(t) for t in texts]
+    try:
+        debug_log_model_status()
+        if model and tokenizer and label_encoder:
+            seqs = tokenizer.texts_to_sequences(texts)
+            padded = pad_sequences(seqs, maxlen=100)
+            preds = model.predict(padded)
+            print('DEBUG: preds =', preds)
+            result = label_encoder.inverse_transform(preds.argmax(axis=1))
+            print('DEBUG: Predicted Sentiment:', result)
+            return result
+        else:
+            print('WARNING: Model/tokenizer/label_encoder not loaded!')
+            return [label_sentiment(t) for t in texts]
+    except Exception as e:
+        print(f'ERROR in predict_sentiment_lstm: {e}')
+        import traceback
+        print(traceback.format_exc())
+        # Return a fallback result so web does not 500
+        return [f'ERROR: {str(e)}']
 
 # Helper untuk load dataset
 def load_data():
@@ -369,7 +351,10 @@ def index():
     if request.method == 'POST':
         komentar = request.form.get('komentar', '')
         clean = preprocess_text(komentar)
-        hasil = predict_sentiment_lstm([clean])[0]
+        try:
+            hasil = predict_sentiment_lstm([clean])[0]
+        except Exception as e:
+            hasil = f'ERROR: {str(e)}'
         hasil_prediksi = {'komentar': komentar, 'cleaned': clean, 'sentimen': hasil}
     df = None
     distribusi_img = None
