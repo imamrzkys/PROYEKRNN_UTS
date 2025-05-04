@@ -48,7 +48,7 @@ log_template_folder()
 
 @app.route('/test_template')
 def test_template():
-    return render_template('index.html')
+    return render_template('home.html')
 
 # Preprocessing sederhana
 def preprocess_text(text):
@@ -350,7 +350,7 @@ def index():
         wordclouds = {'positif': None, 'negatif': None, 'netral': None}
         aktivitas_img = None
     model_status = 'Model LSTM belum tersedia.' if not model else 'Model LSTM siap digunakan.'
-    return render_template('index.html',
+    return render_template('home.html',
         table=sample_data.to_dict(orient='records'),
         sentiment_counts=counts,
         distribusi_img=distribusi_img,
