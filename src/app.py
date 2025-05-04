@@ -128,12 +128,16 @@ def get_latest_wordcloud(sentiment):
 # --- LOAD MODEL, TOKENIZER, ENCODER ---
 def load_artifacts():
     try:
-        model = load_model(MODEL_PATH) if os.path.exists(MODEL_PATH) else None
+        from src.model import MODEL_PATH, TOKENIZER_PATH, LABEL_ENCODER_PATH
+        from tensorflow.keras.models import load_model
         import joblib
+        import os
+        model = load_model(MODEL_PATH) if os.path.exists(MODEL_PATH) else None
         tokenizer = joblib.load(TOKENIZER_PATH) if os.path.exists(TOKENIZER_PATH) else None
         label_encoder = joblib.load(LABEL_ENCODER_PATH) if os.path.exists(LABEL_ENCODER_PATH) else None
         return model, tokenizer, label_encoder
     except Exception as e:
+        import logging
         logging.warning(f'Gagal memuat model/tokenizer/label encoder: {e}')
         return None, None, None
 
