@@ -20,7 +20,7 @@ logging.basicConfig(level=logging.INFO)
 
 # Path
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_FOLDER = os.path.join(BASE_DIR, 'src/static')
+STATIC_FOLDER = os.path.join(BASE_DIR, 'static')
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'dataset')
 MODEL_PATH = os.path.join(BASE_DIR, 'lstm_sentiment.h5')
 TOKENIZER_PATH = os.path.join(BASE_DIR, 'tokenizer_lstm.pkl')
@@ -34,15 +34,15 @@ os.makedirs(STATIC_FOLDER, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # --- FLASK APP SETUP ---
-app = Flask(__name__, static_folder='src/static', template_folder='src/templates')
+app = Flask(__name__, static_folder='static', template_folder='templates')
 app.secret_key = 'supersecretkey'
 
 # Debug logging untuk Railway
 def log_template_folder():
     import os
     print('DEBUG: Current working dir:', os.getcwd())
-    print('DEBUG: Template folder exists?', os.path.exists('src/templates'))
-    print('DEBUG: Files in src/templates:', os.listdir('src/templates') if os.path.exists('src/templates') else 'Not found')
+    print('DEBUG: Template folder exists?', os.path.exists('templates'))
+    print('DEBUG: Files in templates:', os.listdir('templates') if os.path.exists('templates') else 'Not found')
 
 log_template_folder()
 
