@@ -138,13 +138,27 @@ def load_artifacts():
 
 model, tokenizer, label_encoder = load_artifacts()
 
+def debug_log_model_status():
+    import os
+    print('DEBUG: MODEL_PATH exists?', os.path.exists(MODEL_PATH))
+    print('DEBUG: TOKENIZER_PATH exists?', os.path.exists(TOKENIZER_PATH))
+    if os.path.exists(MODEL_PATH):
+        print('DEBUG: MODEL_PATH size:', os.path.getsize(MODEL_PATH))
+    if os.path.exists(TOKENIZER_PATH):
+        print('DEBUG: TOKENIZER_PATH size:', os.path.getsize(TOKENIZER_PATH))
+
 def predict_sentiment_lstm(texts):
+    debug_log_model_status()
     if model and tokenizer and label_encoder:
         seqs = tokenizer.texts_to_sequences(texts)
         padded = pad_sequences(seqs, maxlen=100)
         preds = model.predict(padded)
-        return label_encoder.inverse_transform(preds.argmax(axis=1))
+        print('DEBUG: preds =', preds)
+        result = label_encoder.inverse_transform(preds.argmax(axis=1))
+        print('DEBUG: Predicted Sentiment:', result)
+        return result
     else:
+        print('WARNING: Model/tokenizer/label_encoder not loaded!')
         return [label_sentiment(t) for t in texts]
 
 # Helper untuk load dataset
