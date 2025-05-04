@@ -160,7 +160,7 @@ def predict_sentiment_lstm(texts):
             from tensorflow.keras.preprocessing.text import Tokenizer
             if not isinstance(tokenizer, Tokenizer):
                 print(f'ERROR: Tokenizer tipe salah: {type(tokenizer)}')
-                return ['ERROR: Tokenizer tipe salah!']
+                return ['ERROR: Tokenizer file corrupt atau salah format! Silakan restore file tokenizer_lstm.npy hasil joblib.dump dari training lokal.']
             seqs = tokenizer.texts_to_sequences(texts)
             padded = pad_sequences(seqs, maxlen=100)
             preds = model.predict(padded)
@@ -175,7 +175,7 @@ def predict_sentiment_lstm(texts):
         print(f'ERROR in predict_sentiment_lstm: {e}')
         import traceback
         print(traceback.format_exc())
-        return [f'ERROR: {str(e)}']
+        return [f'ERROR: {str(e)}. Jika error tokenizer, pastikan file tokenizer_lstm.npy hasil joblib.dump dari training lokal.']
 
 # Helper untuk load dataset
 def load_data():
@@ -358,7 +358,7 @@ def index():
         try:
             hasil = predict_sentiment_lstm([clean])[0]
         except Exception as e:
-            hasil = f'ERROR: {str(e)}'
+            hasil = f'ERROR: {str(e)}. Jika error tokenizer, pastikan file tokenizer_lstm.npy hasil joblib.dump dari training lokal.'
         hasil_prediksi = {'komentar': komentar, 'cleaned': clean, 'sentimen': hasil}
     df = None
     distribusi_img = None
