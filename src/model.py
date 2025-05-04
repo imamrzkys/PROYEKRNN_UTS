@@ -12,8 +12,10 @@ import matplotlib.pyplot as plt
 import sys
 import io
 
-MODEL_PATH = os.path.join(os.path.dirname(__file__), '../lstm_sentiment.h5')
-TOKENIZER_PATH = os.path.join(os.path.dirname(__file__), '../tokenizer_lstm.npy')
+# Perbaiki path agar selalu absolut, tidak error di Windows
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+MODEL_PATH = os.path.join(BASE_DIR, 'lstm_sentiment.h5')
+TOKENIZER_PATH = os.path.join(BASE_DIR, 'tokenizer_lstm.npy')
 
 max_words = 3500
 max_len = 50
@@ -51,7 +53,7 @@ def train_lstm_model(csv_path, save_model=True, show_plot=False, progress_callba
         y_cat = to_categorical(y, num_classes=3)
         X_train, X_test, y_train, y_test = train_test_split(X_pad, y_cat, test_size=0.2, random_state=42)
         model = Sequential([
-            Embedding(max_words, 128, input_length=max_len),
+            Embedding(max_words, 128),
             LSTM(64, return_sequences=True),
             Dropout(0.3),
             LSTM(32),

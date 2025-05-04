@@ -1,16 +1,16 @@
 Epoch 1/8
-125/125 - 15s - 124ms/step - accuracy: 0.7529 - loss: 0.7358 - val_accuracy: 0.7793 - val_loss: 0.6803
+125/125 - 17s - 139ms/step - accuracy: 0.7504 - loss: 0.7402 - val_accuracy: 0.7793 - val_loss: 0.6862
 Epoch 2/8
-125/125 - 6s - 50ms/step - accuracy: 0.7575 - loss: 0.7202 - val_accuracy: 0.7793 - val_loss: 0.6850
+125/125 - 8s - 60ms/step - accuracy: 0.7575 - loss: 0.7200 - val_accuracy: 0.7783 - val_loss: 0.6819
 Epoch 3/8
-125/125 - 6s - 50ms/step - accuracy: 0.7575 - loss: 0.7198 - val_accuracy: 0.7783 - val_loss: 0.6753
+125/125 - 8s - 61ms/step - accuracy: 0.7572 - loss: 0.7185 - val_accuracy: 0.7783 - val_loss: 0.6808
 Epoch 4/8
-125/125 - 7s - 56ms/step - accuracy: 0.7552 - loss: 0.6962 - val_accuracy: 0.7793 - val_loss: 0.6538
+125/125 - 8s - 61ms/step - accuracy: 0.7580 - loss: 0.7205 - val_accuracy: 0.7783 - val_loss: 0.6838
 Epoch 5/8
-125/125 - 6s - 50ms/step - accuracy: 0.7570 - loss: 0.6668 - val_accuracy: 0.7793 - val_loss: 0.6465
+125/125 - 8s - 64ms/step - accuracy: 0.7524 - loss: 0.6892 - val_accuracy: 0.7793 - val_loss: 0.6607
 Epoch 6/8
-125/125 - 6s - 50ms/step - accuracy: 0.7577 - loss: 0.6560 - val_accuracy: 0.7793 - val_loss: 0.6371
+125/125 - 8s - 63ms/step - accuracy: 0.7570 - loss: 0.7079 - val_accuracy: 0.7793 - val_loss: 0.6926
 Epoch 7/8
-125/125 - 6s - 49ms/step - accuracy: 0.7570 - loss: 0.6199 - val_accuracy: 0.7793 - val_loss: 0.6106
+125/125 - 6s - 49ms/step - accuracy: 0.7570 - loss: 0.7003 - val_accuracy: 0.7793 - val_loss: 0.6792
 Epoch 8/8
-125/125 - 6s - 50ms/step - accuracy: 0.7570 - loss: 0.6497 - val_accuracy: 0.7793 - val_loss: 0.6211
+125/125 - 7s - 52ms/step - accuracy: 0.7570 - loss: 0.7001 - val_accuracy: 0.7793 - val_loss: 0.6838

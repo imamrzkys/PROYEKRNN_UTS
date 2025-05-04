@@ -45,7 +45,7 @@
     <div id="done-section" style="display:none;">
         <div class="alert alert-success text-center">Training selesai!<br>Menampilkan grafik hasil training...</div>
         <div class="text-center">
-            <img id="training-figure" src="/static/lstm_training.png" alt="Training Figure" class="img-fluid rounded shadow">
+            <img id="training-figure" src="{{ url_for('static', filename='lstm_training.png') }}" alt="Training Figure" class="img-fluid rounded shadow">
         </div>
         <div class="text-center mt-3">
             <a href="/" class="btn btn-primary">Kembali ke Beranda</a>
