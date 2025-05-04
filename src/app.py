@@ -50,6 +50,10 @@ log_template_folder()
 def test_template():
     return render_template('home.html')
 
+@app.route('/test_html')
+def test_html():
+    return render_template('test.html')
+
 # Preprocessing sederhana
 def preprocess_text(text):
     import re, string
