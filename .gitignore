@@ -44,7 +44,6 @@ dataset/*.csv
 # Model artifacts (optional)
 !lstm_sentiment.h5
 !label_encoder.pkl
-tokenizer_lstm.pkl
 
 # Railway
 railway.json
