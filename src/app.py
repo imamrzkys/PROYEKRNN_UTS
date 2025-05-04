@@ -34,12 +34,17 @@ os.makedirs(STATIC_FOLDER, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # --- FLASK APP SETUP ---
-app = Flask(
-    __name__,
-    static_folder=os.path.join(BASE_DIR, 'src/static'),
-    template_folder=os.path.join(BASE_DIR, 'src/templates')
-)
+app = Flask(__name__, static_folder='src/static', template_folder='src/templates')
 app.secret_key = 'supersecretkey'
+
+# Debug logging untuk Railway
+def log_template_folder():
+    import os
+    print('DEBUG: Current working dir:', os.getcwd())
+    print('DEBUG: Template folder exists?', os.path.exists('src/templates'))
+    print('DEBUG: Files in src/templates:', os.listdir('src/templates') if os.path.exists('src/templates') else 'Not found')
+
+log_template_folder()
 
 # Preprocessing sederhana
 def preprocess_text(text):
@@ -264,10 +269,6 @@ ensure_created_at_exists()
 
 # Variabel global untuk progress
 train_progress = {'status': 'idle', 'current': 0, 'total': 0, 'msg': '', 'done': False}
-
-# --- FLASK APP SETUP ---
-# app = Flask(__name__, static_folder='src/static', template_folder='src/templates')
-# app.secret_key = 'supersecretkey'
 
 # Helper: cek ekstensi file upload
 ALLOWED_EXTENSIONS = {'csv'}
