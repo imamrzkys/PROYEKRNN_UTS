@@ -46,6 +46,10 @@ def log_template_folder():
 
 log_template_folder()
 
+@app.route('/test_template')
+def test_template():
+    return render_template('index.html')
+
 # Preprocessing sederhana
 def preprocess_text(text):
     import re, string
