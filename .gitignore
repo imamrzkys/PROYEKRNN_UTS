@@ -41,8 +41,9 @@ dataset/*.csv
 !dataset/komentar_labeled.csv
 !dataset/komentar_labeled_small.csv
 
-# Model artifacts (optional)
-!lstm_sentiment.h5
+# Pastikan file tokenizer_lstm.npy tidak di-ignore
+!tokenizer_lstm.npy
+# Pastikan file label_encoder.pkl tidak di-ignore
 !label_encoder.pkl
 
 # Railway

@@ -24,7 +24,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'dataset')
 MODEL_PATH = os.path.join(BASE_DIR, 'lstm_sentiment.h5')
-TOKENIZER_PATH = os.path.join(BASE_DIR, 'tokenizer_lstm.pkl')
+TOKENIZER_PATH = os.path.join(BASE_DIR, 'tokenizer_lstm.npy')
 LABEL_ENCODER_PATH = os.path.join(BASE_DIR, 'label_encoder.pkl')
 CSV_PATH = os.path.join(BASE_DIR, 'dataset_tiktok-comments-scraper-task_2025-05-01_09-17-35-852.csv')
 DATASET_PATH = os.path.join(BASE_DIR, 'dataset/komentar_labeled.csv')
@@ -129,6 +129,7 @@ def get_latest_wordcloud(sentiment):
 def load_artifacts():
     try:
         model = load_model(MODEL_PATH) if os.path.exists(MODEL_PATH) else None
+        import joblib
         tokenizer = joblib.load(TOKENIZER_PATH) if os.path.exists(TOKENIZER_PATH) else None
         label_encoder = joblib.load(LABEL_ENCODER_PATH) if os.path.exists(LABEL_ENCODER_PATH) else None
         return model, tokenizer, label_encoder

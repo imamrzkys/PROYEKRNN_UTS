@@ -11,11 +11,13 @@ import os
 import matplotlib.pyplot as plt
 import sys
 import io
+import joblib
 
 # Perbaiki path agar selalu absolut, tidak error di Windows
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 MODEL_PATH = os.path.join(BASE_DIR, 'lstm_sentiment.h5')
 TOKENIZER_PATH = os.path.join(BASE_DIR, 'tokenizer_lstm.npy')
+LABEL_ENCODER_PATH = os.path.join(BASE_DIR, 'label_encoder.pkl')
 
 max_words = 3500
 max_len = 50
@@ -75,7 +77,7 @@ def train_lstm_model(csv_path, save_model=True, show_plot=False, progress_callba
         history = model.fit(X_train, y_train, epochs=8, batch_size=32, validation_data=(X_test, y_test), verbose=2, callbacks=callbacks)
         if save_model:
             model.save(MODEL_PATH)
-            np.save(TOKENIZER_PATH, tokenizer.to_json())
+            joblib.dump(tokenizer, TOKENIZER_PATH)
         if show_plot:
             plt.figure(figsize=(12,5))
             plt.subplot(1,2,1)
@@ -119,14 +121,13 @@ def evaluate_lstm_model(model, X_test, y_test):
     report = classification_report(y_true, y_pred, target_names=['negatif','netral','positif'])
     return {'confusion_matrix': cm, 'accuracy': acc, 'precision': prec, 'recall': rec, 'f1': f1, 'report': report}
 
+# --- LOAD LSTM MODEL & TOKENIZER (PAKAI JOBLIB/NPY) ---
 def load_lstm_model():
+    import joblib
     if not os.path.exists(MODEL_PATH):
         return None, None
     model = load_model(MODEL_PATH)
-    from tensorflow.keras.preprocessing.text import tokenizer_from_json
-    import json
-    with open(TOKENIZER_PATH, 'r') as f:
-        tokenizer = tokenizer_from_json(json.load(f))
+    tokenizer = joblib.load(TOKENIZER_PATH) if os.path.exists(TOKENIZER_PATH) else None
     return model, tokenizer
 
 def predict_sentiment_lstm(text, model=None, tokenizer=None):
