@@ -19,7 +19,7 @@ import sys
 logging.basicConfig(level=logging.INFO)
 
 # Path
-BASE_DIR = os.path.dirname(__file__)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_FOLDER = os.path.join(BASE_DIR, 'src/static')
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'dataset')
 MODEL_PATH = os.path.join(BASE_DIR, 'lstm_sentiment.h5')
@@ -34,7 +34,11 @@ os.makedirs(STATIC_FOLDER, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # --- FLASK APP SETUP ---
-app = Flask(__name__, static_folder='src/static', template_folder='src/templates')
+app = Flask(
+    __name__,
+    static_folder=os.path.join(BASE_DIR, 'src/static'),
+    template_folder=os.path.join(BASE_DIR, 'src/templates')
+)
 app.secret_key = 'supersecretkey'
 
 # Preprocessing sederhana
@@ -262,8 +266,8 @@ ensure_created_at_exists()
 train_progress = {'status': 'idle', 'current': 0, 'total': 0, 'msg': '', 'done': False}
 
 # --- FLASK APP SETUP ---
-app = Flask(__name__, static_folder='src/static', template_folder='src/templates')
-app.secret_key = 'supersecretkey'
+# app = Flask(__name__, static_folder='src/static', template_folder='src/templates')
+# app.secret_key = 'supersecretkey'
 
 # Helper: cek ekstensi file upload
 ALLOWED_EXTENSIONS = {'csv'}
