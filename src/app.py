@@ -127,19 +127,44 @@ def get_latest_wordcloud(sentiment):
 
 # --- LOAD MODEL, TOKENIZER, ENCODER ---
 def load_artifacts():
+    from src.model import MODEL_PATH, TOKENIZER_PATH, LABEL_ENCODER_PATH
+    from tensorflow.keras.models import load_model
+    import joblib
+    import os
+    import logging
+    import traceback
+    model = None
+    tokenizer = None
+    label_encoder = None
+    # Load model
     try:
-        from src.model import MODEL_PATH, TOKENIZER_PATH, LABEL_ENCODER_PATH
-        from tensorflow.keras.models import load_model
-        import joblib
-        import os
-        model = load_model(MODEL_PATH) if os.path.exists(MODEL_PATH) else None
-        tokenizer = joblib.load(TOKENIZER_PATH) if os.path.exists(TOKENIZER_PATH) else None
-        label_encoder = joblib.load(LABEL_ENCODER_PATH) if os.path.exists(LABEL_ENCODER_PATH) else None
-        return model, tokenizer, label_encoder
+        if os.path.exists(MODEL_PATH):
+            model = load_model(MODEL_PATH)
+            print("DEBUG: load_model berhasil!")
+        else:
+            print("DEBUG: MODEL_PATH tidak ditemukan!")
     except Exception as e:
-        import logging
-        logging.warning(f'Gagal memuat model/tokenizer/label encoder: {e}')
-        return None, None, None
+        print(f"ERROR load_model: {e}\n{traceback.format_exc()}")
+    # Load tokenizer
+    try:
+        if os.path.exists(TOKENIZER_PATH):
+            tokenizer = joblib.load(TOKENIZER_PATH)
+            print("DEBUG: load_tokenizer berhasil!")
+        else:
+            print("DEBUG: TOKENIZER_PATH tidak ditemukan!")
+    except Exception as e:
+        print(f"ERROR load_tokenizer: {e}\n{traceback.format_exc()}")
+    # Load label encoder
+    try:
+        if os.path.exists(LABEL_ENCODER_PATH):
+            label_encoder = joblib.load(LABEL_ENCODER_PATH)
+            print("DEBUG: load_label_encoder berhasil!")
+        else:
+            print("DEBUG: LABEL_ENCODER_PATH tidak ditemukan!")
+    except Exception as e:
+        print(f"ERROR load_label_encoder: {e}\n{traceback.format_exc()}")
+    print(f"DEBUG: load_model={model is not None}, load_tokenizer={tokenizer is not None}, load_label_encoder={label_encoder is not None}")
+    return model, tokenizer, label_encoder
 
 model, tokenizer, label_encoder = load_artifacts()
 
