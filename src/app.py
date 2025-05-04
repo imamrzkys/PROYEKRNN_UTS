@@ -19,8 +19,9 @@ import sys
 logging.basicConfig(level=logging.INFO)
 
 # Path
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_FOLDER = os.path.join(BASE_DIR, 'static')
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'dataset')
 MODEL_PATH = os.path.join(BASE_DIR, 'lstm_sentiment.h5')
 TOKENIZER_PATH = os.path.join(BASE_DIR, 'tokenizer_lstm.pkl')
@@ -30,14 +31,21 @@ DATASET_PATH = os.path.join(BASE_DIR, 'dataset/komentar_labeled.csv')
 RAW_CSV_PATH = os.path.join(BASE_DIR, 'dataset_tiktok-comments-scraper-task_2025-05-01_09-17-35-852.csv')
 
 # Pastikan folder penting ada
-os.makedirs(STATIC_FOLDER, exist_ok=True)
+os.makedirs(STATIC_DIR, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # --- FLASK APP SETUP ---
-app = Flask(__name__, static_folder='static', template_folder='templates')
+app = Flask(__name__, static_folder=STATIC_DIR, template_folder=TEMPLATE_DIR)
 app.secret_key = 'supersecretkey'
 
 # Debug logging untuk Railway
+print(f'DEBUG: BASE_DIR={BASE_DIR}')
+print(f'DEBUG: TEMPLATE_DIR={TEMPLATE_DIR}')
+print(f'DEBUG: STATIC_DIR={STATIC_DIR}')
+print(f'DEBUG: TEMPLATE_DIR exists? {os.path.exists(TEMPLATE_DIR)}')
+if os.path.exists(TEMPLATE_DIR):
+    print(f'DEBUG: Files in TEMPLATE_DIR: {os.listdir(TEMPLATE_DIR)}')
+
 def log_template_folder():
     import os
     print('DEBUG: Current working dir:', os.getcwd())
@@ -107,7 +115,7 @@ def img_to_base64(path):
     return None
 
 def get_latest_plot(prefix):
-    pattern = os.path.join(STATIC_FOLDER, f'{prefix}_*.png')
+    pattern = os.path.join(STATIC_DIR, f'{prefix}_*.png')
     files = glob.glob(pattern)
     if not files:
         return None
@@ -232,7 +240,7 @@ def plot_wordcloud(df, sentimen):
     return img_base64
 
 def plot_aktivitas_waktu(df):
-    static_img_path = os.path.join(STATIC_FOLDER, 'activity_ed0fd13414fe4ecdb12789637f05e53a.png')
+    static_img_path = os.path.join(STATIC_DIR, 'activity_ed0fd13414fe4ecdb12789637f05e53a.png')
     if os.path.exists(static_img_path):
         with open(static_img_path, 'rb') as f:
             import base64
